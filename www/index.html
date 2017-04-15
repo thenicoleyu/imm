@@ -2,20 +2,14 @@
 <html>
 <head>
 <meta charset="utf-8" />
-<title>Dodging The Objects</title>
-
-<!-- for CreateJS and ZIMjs http://zimjs.com - free to modify - Dan Zen 2016 -->
-<!-- see http://zimjs.com/code/frame.html for more templates and meta tags -->
+<title>MVC APP</title>
 
 <!-- as of ZIM 4.3.0 load createjs namespace first -->
-<script src="js/zim_4.8.0.js"></script>
+<script src="https://code.createjs.com/createjs-2015.11.26.min.js"></script>
 <script>var zon = true; // true for comments from zim code</script>
-<script src="js/createjs-2015.11.26.min"></script><!-- add _doc to see code -->
-<!-- use zimjs.com/code/distill for minified individual functions! -->
-
-<style>
-	body {margin:0px; padding:0px; background-color:#000;}
-</style>
+<script src="https://d309knd7es5f10.cloudfront.net/zim_4.8.1.js"></script>
+<script src="scripts/view.js"></script>
+<script src="scripts/controller.js"></script>
 
 <script>
 
@@ -26,29 +20,45 @@
 // "full"		sets stage to window size with no scaling
 // "tagID"		add canvas to HTML tag of ID - set to dimensions if provided - no scaling
 
-var scaling = "fit"; // fit scales to fit the browser window while keeping the aspect ratio
-var width = 768; // can go higher...
-var height = 1024;
-var color = "#acd241"
+var scaling = "full"; // makes stage the window size but does not scale content
+var width = null;
+var height = null;
+var color = "#ebcb35";
 var frame = new zim.Frame(scaling, width, height, color); // see docs for more options and info
 frame.on("ready", function() {
-	zog("ready from ZIM Frame");
 
 	var stage = frame.stage;
 	var stageW = frame.width;
 	var stageH = frame.height;
 
-	// put your code here (you can delete this code)
-	var circle = new zim.Circle(100, frame.pink).center(stage).drag();
+	var layoutManager = new zim.LayoutManager();
 
-		stage.update(); // update the stage to see any changes
+	var view = app.makeView(stage, stageW, stageH, layoutManager);
 
-
+	// PAGES 
+	var pages = new zim.Pages({
+		holder:stage,
+		pages:[
+			{page: view.page1, swipe:[view.page2, view.page2, null,null]},
+			{page: view.page2, swipe:[view.page1, view.page1, null,null]}
+		],
+		transition:"slide",
+   		speed:1000
 	});
+	pages.addTo(stage);
+
+	frame.on("resize", function(){
+		layoutManager.resize();
+	});
+
+	// CONTROLLER 
+	var control = app.makeController(stage, view, pages);
+
+
+	stage.update()
 
 }); // end of ready
 </script>
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimal-ui" />
 </head>
 
 <body>
