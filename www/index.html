@@ -29,7 +29,7 @@
 		var stageW = frame.width;
 		var stageH = frame.height;
 
-		frame.loadAssets(["hipster.jpg"], 'assets/');
+		frame.loadAssets(["hipster.jpg", "hipster2.jpg"], 'assets/');
 
 		frame.on("complete", function(){
 
@@ -41,22 +41,33 @@
 			logo.x = stageW / 2 - logo.width / 2;
 			logo.y = stageH / 2 - logo.height / 2;
 			logo.alpha = 0;
-			logo.animate({obj:{alpha:1, y: 40}, time:1500, from:false});
+			logo.animate({obj:{alpha:1}, time:1500, loop: 4, from:false});
+
+			var loading = new zim.Label({
+				text: "loading",
+				color: "white",
+				align: "center",
+				size: 20,
+			}).addTo(loadContainer);
+			loading.x = stageW / 2;
+			loading.y = stageH * 2/3 + 20;
+			loading.alpha = 0;
+			loading.animate({obj:{alpha:1}, time:1500, loop: 4, from:false});
 
 			// START SCREEN --------------------------------------------
 			var startContainer = new zim.Container(stageW, stageH);
 
 			setTimeout(function() {
-				// loadContainer.removeFrom(stage);
+				logo.removeFrom(loadContainer);
 				startContainer.addTo(stage);
 				zog("setInterval");
 				stage.update();
-			}, 1700);
+			}, 4500);
 
-			// var logo = frame.asset('hipster.jpg').addTo(startContainer);
-			// logo.width = stageW * 1/3;
-			// logo.x = stageW / 2 - logo.width / 2;
-			// logo.y = 40;
+			var startLogo = frame.asset('hipster2.jpg').addTo(startContainer);
+			startLogo.width = stageW * 1/3;
+			startLogo.x = stageW / 2 - startLogo.width / 2;
+			startLogo.y = 40;
 
 			var intro = new zim.Label({
 				text: "How good is your\n color perception?",
